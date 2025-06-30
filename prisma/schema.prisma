@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  services Service[]
+}
+
+model Service {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  active Boolean @default(true)
+  price Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoryId String @db.ObjectId
+  category Category @relation(fields: [categoryId], references: [id])
+}
+
+model Role {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  active Boolean @default(true)
+
+  permissionIDs String[] @db.ObjectId
+  permissions Permission[] @relation(fields: [permissionIDs], references: [id])
+}
+
+model Permission {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  active Boolean @default(true)
+
+  roleIDs String[] @db.ObjectId
+  roles Role[] @relation(fields: [roleIDs], references: [id])
+}
