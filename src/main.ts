@@ -2,6 +2,7 @@ import express from 'express'
 import { errorHandler } from './shared/middlewares/error.midleware'
 import categoryRouter from './category/category.routes'
 import serviceRouter from './service/service.routes'
+import roleRouter from './role/role.routes'
 
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 // Example route
 app.use('/category', categoryRouter)
 app.use('/service', serviceRouter)
+app.use('/role', roleRouter)
 
 app.use(errorHandler)
 
